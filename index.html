@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PULSE 1.0 – College E-Sports Tournament</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-purple: #b400ff;
+            --neon-pink: #ff00aa;
+            --neon-green: #00ff88;
+            --dark-bg: #050510;
+            --dark-card: #0a0a1e;
+            --dark-card2: #0d0d25;
+            --border-glow: rgba(0, 212, 255, 0.3);
+            --text-primary: #e8f4ff;
+            --text-muted: #7a8fa6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ===== ANIMATED BG ===== */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            from {
+                background-position: 0 0
+            }
+
+            to {
+                background-position: 60px 60px
+            }
+        }
+
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: orbFloat 12s ease-in-out infinite;
+        }
+
+        .orb1 {
+            width: 500px;
+            height: 500px;
+            background: var(--neon-blue);
+            top: -100px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .orb2 {
+            width: 400px;
+            height: 400px;
+            background: var(--neon-purple);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -4s;
+        }
+
+        .orb3 {
+            width: 300px;
+            height: 300px;
+            background: var(--neon-pink);
+            top: 40%;
+            left: 60%;
+            animation-delay: -8s;
+        }
+
+        @keyframes orbFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            33% {
+                transform: translate(30px, -30px) scale(1.05)
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.95)
+            }
+        }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(5, 5, 16, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 22px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+        }
+
+        .nav-logo span {
+            color: var(--neon-pink);
+            -webkit-text-fill-color: var(--neon-pink);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .nav-cta {
+            padding: 8px 24px;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue) !important;
+            border-radius: 4px;
+            transition: all 0.3s !important;
+        }
+
+        .nav-cta:hover {
+            background: var(--neon-blue) !important;
+            color: #000 !important;
+            -webkit-text-fill-color: #000 !important;
+            box-shadow: 0 0 20px var(--neon-blue) !important;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--neon-blue);
+            display: block;
+            transition: 0.3s;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+            overflow: hidden;
+        }
+
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            animation: particleFly linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes particleFly {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0
+            }
+
+            10% {
+                opacity: 1
+            }
+
+            90% {
+                opacity: 0.5
+            }
+
+            100% {
+                transform: translateY(-50px) translateX(var(--dx));
+                opacity: 0
+            }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 20px;
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            border-radius: 30px;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--neon-blue);
+            margin-bottom: 28px;
+            background: rgba(0, 212, 255, 0.05);
+            animation: fadeSlideDown 0.8s ease both;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4)
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(0, 255, 136, 0)
+            }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(70px, 15vw, 160px);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #fff 0%, var(--neon-blue) 40%, var(--neon-purple) 70%, var(--neon-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 40px rgba(0, 212, 255, 0.5));
+            animation: fadeSlideDown 0.8s 0.2s ease both;
+            margin-bottom: 8px;
+        }
+
+        .hero-version {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(14px, 3vw, 22px);
+            letter-spacing: 12px;
+            color: var(--neon-purple);
+            text-shadow: 0 0 20px var(--neon-purple);
+            animation: fadeSlideDown 0.8s 0.3s ease both;
+            margin-bottom: 24px;
+        }
+
+        .hero-sub {
+            font-size: clamp(16px, 3vw, 22px);
+            font-weight: 600;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            animation: fadeSlideDown 0.8s 0.4s ease both;
+            margin-bottom: 48px;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+            animation: fadeSlideDown 0.8s 0.5s ease both;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .meta-label {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            color: var(--neon-blue);
+            font-weight: 700;
+        }
+
+        .meta-sep {
+            width: 1px;
+            height: 50px;
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeSlideDown 0.8s 0.6s ease both;
+        }
+
+        .btn-primary {
+            padding: 16px 48px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4), 0 0 60px rgba(180, 0, 255, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.4s;
+        }
+
+        .btn-primary:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.6), 0 0 100px rgba(180, 0, 255, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 16px 48px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: fadeSlideDown 1s 1s ease both;
+        }
+
+        .scroll-text {
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--text-muted);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--neon-blue), transparent);
+            animation: scrollPulse 2s ease infinite;
+        }
+
+        @keyframes scrollPulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.3
+            }
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--neon-blue);
+            margin-bottom: 16px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .section-line {
+            width: 80px;
+            height: 2px;
+            margin: 0 auto;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        /* ===== EVENT DETAILS ===== */
+        .event-details {
+            padding: 100px 20px;
+        }
+
+        .event-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .event-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .event-card:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+
+        .event-card:hover::before {
+            opacity: 1;
+        }
+
+        .event-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .event-label {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .event-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--neon-blue);
+            line-height: 1.4;
+        }
+
+        .event-card-accent {
+            border-top: 2px solid var(--neon-blue);
+            padding-top: 32px;
+        }
+
+        .event-card-purple {
+            border-color: rgba(180, 0, 255, 0.2);
+        }
+
+        .event-card-purple:hover {
+            border-color: rgba(180, 0, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(180, 0, 255, 0.1);
+        }
+
+        .event-card-purple .event-value {
+            color: var(--neon-purple);
+        }
+
+        .event-card-purple::before {
+            background: linear-gradient(135deg, rgba(180, 0, 255, 0.05), transparent);
+        }
+
+        /* ===== REGISTRATION FORM ===== */
+        .registration {
+            padding: 100px 20px;
+            background: linear-gradient(180deg, transparent, rgba(0, 10, 30, 0.5), transparent);
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-wrapper {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 48px;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.5), 0 0 80px rgba(0, 212, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), var(--neon-purple), transparent);
+        }
+
+        .form-section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--neon-blue);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--neon-blue);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .form-section-title.purple {
+            color: var(--neon-purple);
+        }
+
+        .form-section-title.purple::before {
+            background: var(--neon-purple);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 14px 18px;
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            outline: none;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1), 0 0 20px rgba(0, 212, 255, 0.1);
+            background: rgba(0, 212, 255, 0.03);
+        }
+
+        .form-group select option {
+            background: #0a0a1e;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(122, 143, 166, 0.5);
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .player-pair {
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .player-pair.substitute {
+            border-color: rgba(180, 0, 255, 0.15);
+            background: rgba(180, 0, 255, 0.02);
+        }
+
+        .player-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .player-pair.substitute .player-number {
+            color: var(--neon-purple);
+        }
+
+        .player-pair .form-group {
+            margin-bottom: 12px;
+        }
+
+        .player-pair .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-divider {
+            height: 1px;
+            background: rgba(0, 212, 255, 0.1);
+            margin: 32px 0;
+        }
+
+        /* GAME SELECT */
+        .game-select-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .game-option {
+            position: relative;
+        }
+
+        .game-option input[type=radio] {
+            display: none;
+        }
+
+        .game-option label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 20px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .game-option input[type=radio]:checked+label {
+            border-color: var(--neon-blue);
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            color: var(--neon-blue);
+        }
+
+        .game-option label:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+
+        .game-icon {
+            font-size: 20px;
+        }
+
+        /* SUBMIT BTN */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            margin-top: 32px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3), 0 0 60px rgba(180, 0, 255, 0.15);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.5), 0 0 100px rgba(180, 0, 255, 0.25);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn .btn-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* ===== RULES ===== */
+        .rules {
+            padding: 100px 20px;
+        }
+
+        .rules-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 48px;
+        }
+
+        .rule-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 212, 255, 0.12);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: all 0.3s;
+        }
+
+        .rule-card:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .rule-check {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--neon-blue);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--neon-blue);
+            font-size: 16px;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        .rule-text {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .declaration-box {
+            background: var(--dark-card);
+            border: 1px solid rgba(180, 0, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .declaration-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
+        }
+
+        .declaration-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--neon-purple);
+            letter-spacing: 2px;
+            margin-bottom: 28px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type=checkbox] {
+            display: none;
+        }
+
+        .custom-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 1px solid rgba(180, 0, 255, 0.4);
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-top: 2px;
+            background: rgba(180, 0, 255, 0.05);
+        }
+
+        .checkbox-item input[type=checkbox]:checked+.custom-checkbox {
+            background: var(--neon-purple);
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px rgba(180, 0, 255, 0.5);
+        }
+
+        .checkbox-item input[type=checkbox]:checked+.custom-checkbox::after {
+            content: '✓';
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .checkbox-label {
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.5;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .checkbox-item:hover .checkbox-label {
+            color: var(--text-primary);
+        }
+
+        /* ===== PRIZES ===== */
+        .prizes {
+            padding: 100px 20px;
+        }
+
+        .prizes-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .prize-card {
+            background: var(--dark-card);
+            border-radius: 16px;
+            padding: 40px 28px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .prize-card.winner {
+            border: 1px solid rgba(255, 200, 0, 0.3);
+            box-shadow: 0 0 40px rgba(255, 200, 0, 0.05);
+        }
+
+        .prize-card.second {
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .prize-card.third {
+            border: 1px solid rgba(180, 0, 255, 0.2);
+        }
+
+        .prize-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+        }
+
+        .prize-card.winner::before {
+            background: linear-gradient(90deg, transparent, #ffc800, transparent);
+        }
+
+        .prize-card.second::before {
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        }
+
+        .prize-card.third::before {
+            background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
+        }
+
+        .prize-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .prize-card.winner:hover {
+            box-shadow: 0 20px 60px rgba(255, 200, 0, 0.15);
+        }
+
+        .prize-card.second:hover {
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.15);
+        }
+
+        .prize-card.third:hover {
+            box-shadow: 0 20px 60px rgba(180, 0, 255, 0.15);
+        }
+
+        .prize-icon {
+            font-size: 56px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .prize-place {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .prize-card.winner .prize-place {
+            color: #ffc800;
+        }
+
+        .prize-card.second .prize-place {
+            color: var(--neon-blue);
+        }
+
+        .prize-card.third .prize-place {
+            color: var(--neon-purple);
+        }
+
+        .prize-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .prize-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 60px 40px 30px;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand {}
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .footer-org {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 38px;
+            height: 38px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .footer-col h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--neon-blue);
+        }
+
+        .footer-contact {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 2;
+        }
+
+        .footer-bottom {
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-copy {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-made {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-made span {
+            color: var(--neon-pink);
+        }
+
+        /* ===== MODALS ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: var(--dark-card);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 48px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.1), 0 0 100px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), var(--neon-purple), transparent);
+        }
+
+        .modal-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--neon-blue);
+            margin-bottom: 16px;
+        }
+
+        .modal-msg {
+            font-size: 17px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .modal-highlight {
+            color: var(--neon-blue);
+            font-weight: 700;
+        }
+
+        .modal-close {
+            cursor: pointer;
+        }
+
+        /* ERROR MODAL */
+        .modal.error-modal {
+            border-color: rgba(255, 50, 50, 0.3);
+        }
+
+        .modal.error-modal::before {
+            background: linear-gradient(90deg, transparent, #ff3232, transparent);
+        }
+
+        .modal.error-modal .modal-title {
+            color: #ff5555;
+        }
+
+        /* LOADING */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading .spinner {
+            display: block;
+        }
+
+        .loading .btn-text {
+            display: none;
+        }
+
+        /* ===== ANIMATE ON SCROLL ===== */
+        .aos {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .aos.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .aos-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .aos-delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .aos-delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        .aos-delay-4 {
+            transition-delay: 0.4s;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            nav {
+                padding: 14px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .form-wrapper {
+                padding: 28px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-select-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .hero-meta {
+                gap: 24px;
+            }
+
+            .meta-sep {
+                display: none;
+            }
+
+            .declaration-box {
+                padding: 24px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .prizes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 14px 28px;
+                font-size: 12px;
+            }
+        }
+
+        /* Validation error */
+        .field-error {
+            font-size: 12px;
+            color: #ff5555;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #ff5555;
+            box-shadow: 0 0 0 3px rgba(255, 85, 85, 0.1);
+        }
+
+        .form-group.error .field-error {
+            display: block;
+        }
+
+        /* Corner decorations */
+        .corner-deco {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: var(--neon-blue);
+            border-style: solid;
+        }
+
+        .corner-deco.tl {
+            top: 12px;
+            left: 12px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .corner-deco.tr {
+            top: 12px;
+            right: 12px;
+            border-width: 2px 2px 0 0;
+        }
+
+        .corner-deco.bl {
+            bottom: 12px;
+            left: 12px;
+            border-width: 0 0 2px 2px;
+        }
+
+        .corner-deco.br {
+            bottom: 12px;
+            right: 12px;
+            border-width: 0 2px 2px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="bg-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo">PULSE<span>1.0</span></div>
+        <div class="nav-links">
+            <a href="#event">Event</a>
+            <a href="#register">Register</a>
+            <a href="#rules">Rules</a>
+            <a href="#prizes">Prizes</a>
+            <a href="#register" class="nav-cta">Register Now</a>
+        </div>
+        <div class="hamburger" onclick="toggleMenu(this)">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Registrations Open Now
+        </div>
+        <div class="hero-title">PULSE</div>
+        <div class="hero-version">VERSION 1.0</div>
+        <div class="hero-sub">Student Association E-Sports Tournament &nbsp;|&nbsp; BGMI &amp; Free Fire MAX</div>
+        <div class="hero-meta">
+            <div class="meta-item">
+                <span class="meta-label">Event Date</span>
+                <span class="meta-value">12 May 2026</span>
+            </div>
+            <div class="meta-sep"></div>
+            <div class="meta-item">
+                <span class="meta-label">Format</span>
+                <span class="meta-value">Squad</span>
+            </div>
+            <div class="meta-sep"></div>
+            <div class="meta-item">
+                <span class="meta-label">Duration</span>
+                <span class="meta-value">2 Hours</span>
+            </div>
+            <div class="meta-sep"></div>
+            <div class="meta-item">
+                <span class="meta-label">Platform</span>
+                <span class="meta-value">Mobile Only</span>
+            </div>
+        </div>
+        <div class="hero-btns">
+            <a href="#register" class="btn-primary">⚡ Register Now</a>
+            <a href="#event" class="btn-secondary">Learn More</a>
+        </div>
+        <div class="scroll-indicator">
+            <span class="scroll-text">SCROLL</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- EVENT DETAILS -->
+    <section class="event-details" id="event">
+        <div class="section-header aos">
+            <div class="section-tag">// Event Details</div>
+            <h2 class="section-title">Tournament Overview</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="event-grid">
+            <div class="event-card aos aos-delay-1">
+                <span class="event-icon">🎮</span>
+                <div class="event-label">Games</div>
+                <div class="event-value">BGMI &amp; Free Fire MAX</div>
+            </div>
+            <div class="event-card event-card-purple aos aos-delay-2">
+                <span class="event-icon">🏆</span>
+                <div class="event-label">Match Type</div>
+                <div class="event-value">Squad Custom Room</div>
+            </div>
+            <div class="event-card aos aos-delay-3">
+                <span class="event-icon">⏱️</span>
+                <div class="event-label">Duration</div>
+                <div class="event-value">2 Hours</div>
+            </div>
+            <div class="event-card event-card-purple aos aos-delay-1">
+                <span class="event-icon">📱</span>
+                <div class="event-label">Devices Allowed</div>
+                <div class="event-value">Mobile Phones Only</div>
+            </div>
+            <div class="event-card aos aos-delay-2">
+                <span class="event-icon">📶</span>
+                <div class="event-label">Internet</div>
+                <div class="event-value">Personal Mobile Data</div>
+            </div>
+            <div class="event-card event-card-purple aos aos-delay-3">
+                <span class="event-icon">🎯</span>
+                <div class="event-label">Winner Criteria</div>
+                <div class="event-value">Highest Kills</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REGISTRATION FORM -->
+    <section class="registration" id="register">
+        <div class="form-container">
+            <div class="section-header aos">
+                <div class="section-tag">// Squad Registration</div>
+                <h2 class="section-title">Register Your Squad</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="form-wrapper aos">
+                <div class="corner-deco tl"></div>
+                <div class="corner-deco tr"></div>
+                <div class="corner-deco bl"></div>
+                <div class="corner-deco br"></div>
+
+                <form id="registrationForm" novalidate>
+
+                    <!-- Team Info -->
+                    <div class="form-section-title">Team Information</div>
+                    <div class="form-row">
+                        <div class="form-group" id="grp-teamName">
+                            <label>Team Name *</label>
+                            <input type="text" id="teamName" placeholder="Enter your squad name" required>
+                            <div class="field-error">Please enter your team name</div>
+                        </div>
+                        <div class="form-group" id="grp-leaderName">
+                            <label>Team Leader Name *</label>
+                            <input type="text" id="leaderName" placeholder="Leader's full name" required>
+                            <div class="field-error">Please enter the team leader name</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" id="grp-contact">
+                            <label>Contact Number *</label>
+                            <input type="tel" id="contact" placeholder="10-digit mobile number" required maxlength="10">
+                            <div class="field-error">Please enter a valid 10-digit contact number</div>
+                        </div>
+                        <div class="form-group" id="grp-department">
+                            <label>Department / Class *</label>
+                            <input type="text" id="department" placeholder="e.g., FY Computer Engg" required>
+                            <div class="field-error">Please enter your department/class</div>
+                        </div>
+                    </div>
+
+                    <!-- Game Selection -->
+                    <div class="form-divider"></div>
+                    <div class="form-section-title purple">Select Game *</div>
+                    <div class="game-select-grid" id="grp-game">
+                        <div class="game-option">
+                            <input type="radio" name="game" id="gameBGMI" value="BGMI">
+                            <label for="gameBGMI"><span class="game-icon">🔫</span> BGMI</label>
+                        </div>
+                        <div class="game-option">
+                            <input type="radio" name="game" id="gameFF" value="Free Fire MAX">
+                            <label for="gameFF"><span class="game-icon">🔥</span> Free Fire MAX</label>
+                        </div>
+                        <div class="game-option">
+                            <input type="radio" name="game" id="gameBoth" value="Both">
+                            <label for="gameBoth"><span class="game-icon">⚔️</span> Both</label>
+                        </div>
+                    </div>
+                    <div class="field-error" id="game-error" style="margin-top:8px;">Please select a game</div>
+
+                    <!-- Players -->
+                    <div class="form-divider"></div>
+                    <div class="form-section-title">Squad Players</div>
+                    <div class="players-grid">
+                        <div class="player-pair">
+                            <div class="player-number">PLAYER 1</div>
+                            <div class="form-group" id="grp-p1name">
+                                <label>Player Name *</label>
+                                <input type="text" id="p1name" placeholder="In-game name" required>
+                                <div class="field-error">Required</div>
+                            </div>
+                            <div class="form-group" id="grp-p1uid">
+                                <label>Player UID *</label>
+                                <input type="text" id="p1uid" placeholder="Game UID" required>
+                                <div class="field-error">Required</div>
+                            </div>
+                        </div>
+                        <div class="player-pair">
+                            <div class="player-number">PLAYER 2</div>
+                            <div class="form-group" id="grp-p2name">
+                                <label>Player Name *</label>
+                                <input type="text" id="p2name" placeholder="In-game name" required>
+                                <div class="field-error">Required</div>
+                            </div>
+                            <div class="form-group" id="grp-p2uid">
+                                <label>Player UID *</label>
+                                <input type="text" id="p2uid" placeholder="Game UID" required>
+                                <div class="field-error">Required</div>
+                            </div>
+                        </div>
+                        <div class="player-pair">
+                            <div class="player-number">PLAYER 3</div>
+                            <div class="form-group" id="grp-p3name">
+                                <label>Player Name *</label>
+                                <input type="text" id="p3name" placeholder="In-game name" required>
+                                <div class="field-error">Required</div>
+                            </div>
+                            <div class="form-group" id="grp-p3uid">
+                                <label>Player UID *</label>
+                                <input type="text" id="p3uid" placeholder="Game UID" required>
+                                <div class="field-error">Required</div>
+                            </div>
+                        </div>
+                        <div class="player-pair">
+                            <div class="player-number">PLAYER 4</div>
+                            <div class="form-group" id="grp-p4name">
+                                <label>Player Name *</label>
+                                <input type="text" id="p4name" placeholder="In-game name" required>
+                                <div class="field-error">Required</div>
+                            </div>
+                            <div class="form-group" id="grp-p4uid">
+                                <label>Player UID *</label>
+                                <input type="text" id="p4uid" placeholder="Game UID" required>
+                                <div class="field-error">Required</div>
+                            </div>
+                        </div>
+                        <div class="player-pair substitute" style="grid-column:span 2">
+                            <div class="player-number">SUBSTITUTE (OPTIONAL)</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Player Name</label>
+                                    <input type="text" id="subName" placeholder="Substitute in-game name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Player UID</label>
+                                    <input type="text" id="subUID" placeholder="Substitute Game UID">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <div class="btn-inner">
+                            <div class="spinner" id="spinner"></div>
+                            <span class="btn-text">⚡ Submit Registration</span>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- RULES -->
+    <section class="rules" id="rules">
+        <div class="rules-container">
+            <div class="section-header aos">
+                <div class="section-tag">// Tournament Rules</div>
+                <h2 class="section-title">Rules &amp; Regulations</h2>
+                <div class="section-line"></div>
+            </div>
+
+
+            <div class="declaration-box aos">
+                <div class="declaration-title">⚠️ Mandatory Declaration</div>
+                <div class="checkbox-group" id="declarations">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="decl1" class="decl-check">
+                        <div class="custom-checkbox"></div>
+                        <span class="checkbox-label">I understand that if my internet connection does not work properly
+                            during the match, organizers will not be responsible.</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="decl2" class="decl-check">
+                        <div class="custom-checkbox"></div>
+                        <span class="checkbox-label">I understand that using abusive or bad language can lead to
+                            immediate disqualification.</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="decl3" class="decl-check">
+                        <div class="custom-checkbox"></div>
+                        <span class="checkbox-label">I agree that the decision of judges and organizers will be final
+                            and binding.</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="decl4" class="decl-check">
+                        <div class="custom-checkbox"></div>
+                        <span class="checkbox-label">I understand that if the game crashes, lags, or closes on my device
+                            during the match, I will be solely responsible.</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="decl5" class="decl-check">
+                        <div class="custom-checkbox"></div>
+                        <span class="checkbox-label">I confirm that all provided details are correct and
+                            complete.</span>
+                    </label>
+                </div>
+                <div class="field-error" id="decl-error" style="margin-top:16px;font-size:13px;">Please accept all
+                    declarations to proceed</div>
+            </div>
+
+            <div style="text-align:center;margin-top:32px;">
+                <button class="btn-primary" onclick="scrollToRegister()">⚡ Complete Registration Above</button>
+            </div>
+        </div>
+    </section>
+    <div class="rules-grid">
+        <div class="rule-card aos aos-delay-1">
+            <div class="rule-check">✓</div>
+            <div class="rule-text">Squad registration only — no solo or duo entries allowed</div>
+        </div>
+        <div class="rule-card aos aos-delay-2">
+            <div class="rule-check">✓</div>
+            <div class="rule-text">Emulators are strictly not allowed — mobile devices only</div>
+        </div>
+        <div class="rule-card aos aos-delay-3">
+            <div class="rule-check">✓</div>
+            <div class="rule-text">No hacks, cheats, or third-party tools permitted</div>
+        </div>
+        <div class="rule-card aos aos-delay-1">
+            <div class="rule-check">✓</div>
+            <div class="rule-text">Only mobile phones are allowed during match</div>
+        </div>
+        <div class="rule-card aos aos-delay-2">
+            <div class="rule-check">✓</div>
+            <div class="rule-text">Highest kills decide the winner of the match</div>
+        </div>
+        <div class="rule-card aos aos-delay-3">
+            <div class="rule-check">✓</div>
+            <div class="rule-text">Organizers' decision is final in all matters</div>
+        </div>
+    </div>
+
+
+    <!-- PRIZES -->
+    <section class="prizes" id="prizes">
+        <div class="section-header aos">
+            <div class="section-tag">// Rewards</div>
+            <h2 class="section-title">Prize Pool</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="prizes-grid">
+            <div class="prize-card winner aos aos-delay-1">
+                <span class="prize-icon">🏆</span>
+                <div class="prize-place">Champion</div>
+                <div class="prize-name">Winner Trophy</div>
+                <div class="prize-desc">Prestigious champion trophy awarded to the winning squad of PULSE 1.0</div>
+            </div>
+            <div class="prize-card second aos aos-delay-2">
+                <span class="prize-icon">🎖️</span>
+                <div class="prize-place">All Teams</div>
+                <div class="prize-name">Certificates</div>
+                <div class="prize-desc">Official participation &amp; achievement certificates for all registered players
+                </div>
+            </div>
+            <div class="prize-card third aos aos-delay-3">
+                <span class="prize-icon">⭐</span>
+                <div class="prize-place">Top Performers</div>
+                <div class="prize-name">Special Recognition</div>
+                <div class="prize-desc">Special recognition for outstanding performance and exceptional gameplay</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-logo">PULSE 1.0</div>
+                    <div class="footer-org">
+                        Organized by <strong>SAFE</strong><br>
+                        Student Association of First Year Engineering<br>
+                        College E-Sports Tournament – BGMI &amp; Free Fire MAX
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" class="social-btn" title="Instagram">📸</a>
+                        <a href="#" class="social-btn" title="WhatsApp">💬</a>
+                        <a href="#" class="social-btn" title="YouTube">▶️</a>
+                        <a href="#" class="social-btn" title="Twitter">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#event">Event Details</a></li>
+                        <li><a href="#register">Register</a></li>
+                        <li><a href="#rules">Rules</a></li>
+                        <li><a href="#prizes">Prizes</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <div class="footer-contact">
+                        📧 safe@college.edu<br>
+                        📞 +91 XXXXX XXXXX<br>
+                        📍 College Campus<br>
+                        🕐 9 AM – 5 PM
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copy">© 2025 PULSE 1.0 · SAFE – Student Association of First Year Engineering</div>
+                <div class="footer-made">Made with <span>♥</span> for gamers</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SUCCESS MODAL -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal">
+            <div class="corner-deco tl"></div>
+            <div class="corner-deco tr"></div>
+            <div class="corner-deco bl"></div>
+            <div class="corner-deco br"></div>
+            <span class="modal-icon">🎮</span>
+            <div class="modal-title">Registration Successful!</div>
+            <div class="modal-msg">
+                Your squad has been successfully registered for <span class="modal-highlight">PULSE 1.0</span>.<br><br>
+                Get ready to drop in and dominate! We'll contact you with further details soon.
+            </div>
+            <button class="btn-primary modal-close" onclick="closeModal('successModal')">CLOSE &nbsp; ✓</button>
+        </div>
+    </div>
+
+    <!-- ERROR MODAL -->
+    <div class="modal-overlay" id="errorModal">
+        <div class="modal error-modal">
+            <span class="modal-icon">⚠️</span>
+            <div class="modal-title">Submission Failed</div>
+            <div class="modal-msg" id="errorMsg">Something went wrong. Please try again or contact the organizers.</div>
+            <button class="btn-secondary modal-close" onclick="closeModal('errorModal')">TRY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== GOOGLE SHEETS CONFIG =====
+        // Replace with your Google Apps Script Web App URL
+        const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+        // ===== PARTICLES =====
+        (function () {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.cssText = `
+        left: ${Math.random() * 100}%;
+        animation-duration: ${5 + Math.random() * 10}s;
+        animation-delay: ${Math.random() * 10}s;
+        --dx: ${(Math.random() - 0.5) * 200}px;
+        opacity: 0;
+        width: ${Math.random() > 0.7 ? 3 : 2}px;
+        height: ${Math.random() > 0.7 ? 3 : 2}px;
+        background: ${Math.random() > 0.5 ? '#00d4ff' : '#b400ff'};
+      `;
+                container.appendChild(p);
+            }
+        })();
+
+        // ===== AOS =====
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.aos').forEach(el => observer.observe(el));
+
+        // ===== HAMBURGER =====
+        function toggleMenu(el) {
+            el.classList.toggle('open');
+        }
+
+        // ===== SCROLL TO REGISTER =====
+        function scrollToRegister() {
+            document.getElementById('register').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ===== MODAL =====
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // ===== VALIDATION =====
+        function validateField(id, condition) {
+            const grp = document.getElementById('grp-' + id);
+            if (grp) {
+                if (!condition) { grp.classList.add('error'); return false; }
+                grp.classList.remove('error'); return true;
+            }
+            return condition;
+        }
+
+        function getSelectedGame() {
+            const r = document.querySelector('input[name="game"]:checked');
+            return r ? r.value : null;
+        }
+
+        function allDeclChecked() {
+            return [...document.querySelectorAll('.decl-check')].every(c => c.checked);
+        }
+
+        // ===== FORM SUBMIT =====
+        document.getElementById('registrationForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Collect values
+            const teamName = document.getElementById('teamName').value.trim();
+            const leaderName = document.getElementById('leaderName').value.trim();
+            const contact = document.getElementById('contact').value.trim();
+            const department = document.getElementById('department').value.trim();
+            const game = getSelectedGame();
+            const p1name = document.getElementById('p1name').value.trim();
+            const p1uid = document.getElementById('p1uid').value.trim();
+            const p2name = document.getElementById('p2name').value.trim();
+            const p2uid = document.getElementById('p2uid').value.trim();
+            const p3name = document.getElementById('p3name').value.trim();
+            const p3uid = document.getElementById('p3uid').value.trim();
+            const p4name = document.getElementById('p4name').value.trim();
+            const p4uid = document.getElementById('p4uid').value.trim();
+            const subName = document.getElementById('subName').value.trim();
+            const subUID = document.getElementById('subUID').value.trim();
+
+            // Validate
+            let valid = true;
+            valid = validateField('teamName', teamName.length > 0) && valid;
+            valid = validateField('leaderName', leaderName.length > 0) && valid;
+            valid = validateField('contact', /^\d{10}$/.test(contact)) && valid;
+            valid = validateField('department', department.length > 0) && valid;
+            valid = validateField('p1name', p1name.length > 0) && valid;
+            valid = validateField('p1uid', p1uid.length > 0) && valid;
+            valid = validateField('p2name', p2name.length > 0) && valid;
+            valid = validateField('p2uid', p2uid.length > 0) && valid;
+            valid = validateField('p3name', p3name.length > 0) && valid;
+            valid = validateField('p3uid', p3uid.length > 0) && valid;
+            valid = validateField('p4name', p4name.length > 0) && valid;
+            valid = validateField('p4uid', p4uid.length > 0) && valid;
+
+            if (!game) {
+                document.getElementById('game-error').style.display = 'block';
+                valid = false;
+            } else {
+                document.getElementById('game-error').style.display = 'none';
+            }
+
+            if (!allDeclChecked()) {
+                document.getElementById('decl-error').style.display = 'block';
+                document.getElementById('rules').scrollIntoView({ behavior: 'smooth' });
+                valid = false;
+            } else {
+                document.getElementById('decl-error').style.display = 'none';
+            }
+
+            if (!valid) return;
+
+            // Build player names and UIDs columns (single cell with \n line breaks)
+            let playerNames = `Player 1 - ${p1name}\nPlayer 2 - ${p2name}\nPlayer 3 - ${p3name}\nPlayer 4 - ${p4name}`;
+            let playerUIDs = `Player 1 - ${p1uid}\nPlayer 2 - ${p2uid}\nPlayer 3 - ${p3uid}\nPlayer 4 - ${p4uid}`;
+            if (subName) playerNames += `\nSubstitute - ${subName}`;
+            if (subUID) playerUIDs += `\nSubstitute - ${subUID}`;
+
+            // Payload
+            const payload = {
+                teamName,
+                leaderName,
+                contact,
+                department,
+                game,
+                playerNames,
+                playerUIDs
+            };
+
+            // Loading state
+            const btn = document.getElementById('submitBtn');
+            const spinner = document.getElementById('spinner');
+            btn.disabled = true;
+            btn.classList.add('loading');
+            spinner.style.display = 'block';
+            btn.querySelector('.btn-text').style.display = 'none';
+
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                // no-cors always resolves (opaque response), so we assume success
+                openModal('successModal');
+                document.getElementById('registrationForm').reset();
+            } catch (err) {
+                document.getElementById('errorMsg').textContent = 'Failed to submit. Please check your connection and try again.';
+                openModal('errorModal');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                spinner.style.display = 'none';
+                btn.querySelector('.btn-text').style.display = 'inline';
+            }
+        });
+    </script>
+
+    <!-- GOOGLE APPS SCRIPT SETUP GUIDE (remove before going live) -->
+    <!--
+  ============================================================
+  GOOGLE APPS SCRIPT SETUP:
+  ============================================================
+  1. Go to: https://script.google.com
+  2. Create new project → paste this code:
+
+  function doPost(e) {
+    var sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    var timestamp = new Date().toLocaleString('en-IN');
+    sheet.appendRow([
+      timestamp,
+      data.teamName,
+      data.leaderName,
+      data.contact,
+      data.department,
+      data.game,
+      data.playerNames,   // stored with \n line breaks in one cell
+      data.playerUIDs     // stored with \n line breaks in one cell
+    ]);
+    return ContentService
+      .createTextOutput(JSON.stringify({result: 'success'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  3. Deploy → New Deployment → Web App
+     - Execute as: Me
+     - Who has access: Anyone
+  4. Copy the Web App URL → paste it as APPS_SCRIPT_URL above
+  ============================================================
+-->
+</body>
+
+</html>

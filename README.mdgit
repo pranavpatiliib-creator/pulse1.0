@@ -1,0 +1,1 @@
+"# pulse1.0"  initgit add README.mdgit commit -m "first commit"git branch -M maingit remote add origin https://github.com/pranavpatiliib-creator/pulse1.0.gitgit push -u origin main
