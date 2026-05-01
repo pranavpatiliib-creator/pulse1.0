@@ -703,6 +703,7 @@
             transition: all 0.3s;
             outline: none;
             width: 100%;
+            min-width: 0;
         }
 
         .form-group input:focus,
@@ -722,7 +723,7 @@
 
         .players-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;
         }
 
@@ -732,11 +733,14 @@
             border-radius: 10px;
             padding: 20px;
             position: relative;
+            min-width: 0;
+            width: 100%;
         }
 
         .player-pair.substitute {
             border-color: rgba(180, 0, 255, 0.15);
             background: rgba(180, 0, 255, 0.02);
+            grid-column: 1 / -1;
         }
 
         .player-number {
@@ -769,7 +773,7 @@
         /* GAME SELECT */
         .game-select-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
 
@@ -1368,6 +1372,17 @@
         }
 
         /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .player-pair,
+            .player-pair.substitute {
+                grid-column: 1 / -1;
+            }
+        }
+
         @media (max-width: 768px) {
             nav {
                 padding: 14px 20px;
@@ -1646,10 +1661,6 @@
                             <input type="radio" name="game" id="gameFF" value="Free Fire MAX">
                             <label for="gameFF"><span class="game-icon">🔥</span> Free Fire MAX</label>
                         </div>
-                        <div class="game-option">
-                            <input type="radio" name="game" id="gameBoth" value="Both">
-                            <label for="gameBoth"><span class="game-icon">⚔️</span> Both</label>
-                        </div>
                     </div>
                     <div class="field-error" id="game-error" style="margin-top:8px;">Please select a game</div>
 
@@ -1709,7 +1720,7 @@
                                 <div class="field-error">Required</div>
                             </div>
                         </div>
-                        <div class="player-pair substitute" style="grid-column:span 2">
+                        <div class="player-pair substitute">
                             <div class="player-number">SUBSTITUTE (OPTIONAL)</div>
                             <div class="form-row">
                                 <div class="form-group">
@@ -1722,6 +1733,46 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Declarations -->
+                    <div class="form-divider"></div>
+                    <div class="declaration-box aos">
+                        <div class="declaration-title">⚠️ Mandatory Declaration</div>
+                        <div class="checkbox-group" id="declarations">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="decl1" class="decl-check">
+                                <div class="custom-checkbox"></div>
+                                <span class="checkbox-label">I understand that if my internet connection does not work properly
+                                    during the match, organizers will not be responsible.</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="decl2" class="decl-check">
+                                <div class="custom-checkbox"></div>
+                                <span class="checkbox-label">I understand that using abusive or bad language can lead to
+                                    immediate disqualification.</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="decl3" class="decl-check">
+                                <div class="custom-checkbox"></div>
+                                <span class="checkbox-label">I agree that the decision of judges and organizers will be final
+                                    and binding.</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="decl4" class="decl-check">
+                                <div class="custom-checkbox"></div>
+                                <span class="checkbox-label">I understand that if the game crashes, lags, or closes on my device
+                                    during the match, I will be solely responsible.</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="decl5" class="decl-check">
+                                <div class="custom-checkbox"></div>
+                                <span class="checkbox-label">I confirm that all provided details are correct and
+                                    complete.</span>
+                            </label>
+                        </div>
+                        <div class="field-error" id="decl-error" style="margin-top:16px;font-size:13px;">Please accept all
+                            declarations to proceed</div>
                     </div>
 
                     <!-- Submit -->
@@ -1744,51 +1795,6 @@
                 <h2 class="section-title">Rules &amp; Regulations</h2>
                 <div class="section-line"></div>
             </div>
-
-
-            <div class="declaration-box aos">
-                <div class="declaration-title">⚠️ Mandatory Declaration</div>
-                <div class="checkbox-group" id="declarations">
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="decl1" class="decl-check">
-                        <div class="custom-checkbox"></div>
-                        <span class="checkbox-label">I understand that if my internet connection does not work properly
-                            during the match, organizers will not be responsible.</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="decl2" class="decl-check">
-                        <div class="custom-checkbox"></div>
-                        <span class="checkbox-label">I understand that using abusive or bad language can lead to
-                            immediate disqualification.</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="decl3" class="decl-check">
-                        <div class="custom-checkbox"></div>
-                        <span class="checkbox-label">I agree that the decision of judges and organizers will be final
-                            and binding.</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="decl4" class="decl-check">
-                        <div class="custom-checkbox"></div>
-                        <span class="checkbox-label">I understand that if the game crashes, lags, or closes on my device
-                            during the match, I will be solely responsible.</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="decl5" class="decl-check">
-                        <div class="custom-checkbox"></div>
-                        <span class="checkbox-label">I confirm that all provided details are correct and
-                            complete.</span>
-                    </label>
-                </div>
-                <div class="field-error" id="decl-error" style="margin-top:16px;font-size:13px;">Please accept all
-                    declarations to proceed</div>
-            </div>
-
-            <div style="text-align:center;margin-top:32px;">
-                <button class="btn-primary" onclick="scrollToRegister()">⚡ Complete Registration Above</button>
-            </div>
-        </div>
-    </section>
     <div class="rules-grid">
         <div class="rule-card aos aos-delay-1">
             <div class="rule-check">✓</div>
@@ -1816,8 +1822,12 @@
         </div>
     </div>
 
+            <div style="text-align:center;margin-top:32px;">
+                <button class="btn-primary" onclick="scrollToRegister()">⚡ Complete Registration Above</button>
+            </div>
+        </div>
+    </section>
 
-    <!-- PRIZES -->
     <section class="prizes" id="prizes">
         <div class="section-header aos">
             <div class="section-tag">// Rewards</div>
@@ -1922,7 +1932,7 @@
     <script>
         // ===== GOOGLE SHEETS CONFIG =====
         // Replace with your Google Apps Script Web App URL
-        const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeneO-zfi8BFfKBOZPGfgv4joHF3G_HuHwS8F_IJtjYgR61qtfe3z0ODLU54k0VduT/exec';
 
         // ===== PARTICLES =====
         (function () {
@@ -2032,7 +2042,7 @@
 
             if (!allDeclChecked()) {
                 document.getElementById('decl-error').style.display = 'block';
-                document.getElementById('rules').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('declarations').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 valid = false;
             } else {
                 document.getElementById('decl-error').style.display = 'none';
@@ -2041,10 +2051,10 @@
             if (!valid) return;
 
             // Build player names and UIDs columns (single cell with \n line breaks)
-            let playerNames = `Player 1 - ${p1name}\nPlayer 2 - ${p2name}\nPlayer 3 - ${p3name}\nPlayer 4 - ${p4name}`;
-            let playerUIDs = `Player 1 - ${p1uid}\nPlayer 2 - ${p2uid}\nPlayer 3 - ${p3uid}\nPlayer 4 - ${p4uid}`;
-            if (subName) playerNames += `\nSubstitute - ${subName}`;
-            if (subUID) playerUIDs += `\nSubstitute - ${subUID}`;
+            let playerNames = `1. ${p1name}\n2. ${p2name}\n3. ${p3name}\n4. ${p4name}`;
+            let playerUIDs = `1. ${p1uid}\n2. ${p2uid}\n3. ${p3uid}\n4. ${p4uid}`;
+            if (subName) playerNames += `\n5. ${subName}`;
+            if (subUID) playerUIDs += `\n5. ${subUID}`;
 
             // Payload
             const payload = {
@@ -2069,7 +2079,7 @@
                 const res = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
                 // no-cors always resolves (opaque response), so we assume success
@@ -2087,39 +2097,6 @@
         });
     </script>
 
-    <!-- GOOGLE APPS SCRIPT SETUP GUIDE (remove before going live) -->
-    <!--
-  ============================================================
-  GOOGLE APPS SCRIPT SETUP:
-  ============================================================
-  1. Go to: https://script.google.com
-  2. Create new project → paste this code:
-
-  function doPost(e) {
-    var sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getActiveSheet();
-    var data = JSON.parse(e.postData.contents);
-    var timestamp = new Date().toLocaleString('en-IN');
-    sheet.appendRow([
-      timestamp,
-      data.teamName,
-      data.leaderName,
-      data.contact,
-      data.department,
-      data.game,
-      data.playerNames,   // stored with \n line breaks in one cell
-      data.playerUIDs     // stored with \n line breaks in one cell
-    ]);
-    return ContentService
-      .createTextOutput(JSON.stringify({result: 'success'}))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-
-  3. Deploy → New Deployment → Web App
-     - Execute as: Me
-     - Who has access: Anyone
-  4. Copy the Web App URL → paste it as APPS_SCRIPT_URL above
-  ============================================================
--->
 </body>
 
 </html>
