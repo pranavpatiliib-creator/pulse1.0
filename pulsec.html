@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PULSE 1.0 — Student Registration</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --deep-saffron: #E07B00;
+            --gold: #D4AF37;
+            --dark-gold: #B8860B;
+            --maroon: #800000;
+            --deep-maroon: #5C0000;
+            --ivory: #FFF8E7;
+            --cream: #FAF0D0;
+            --text-dark: #1A0A00;
+            --text-mid: #3D1E00;
+            --peacock: #006D5B;
+            --peacock-light: #00A896;
+            --vermillion: #CC3300;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--deep-maroon);
+            font-family: 'Crimson Pro', Georgia, serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* === DECORATIVE BORDER FRAME === */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 10px;
+            border: 2px solid var(--gold);
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: inset 0 0 30px rgba(212, 175, 55, 0.15), 0 0 30px rgba(212, 175, 55, 0.1);
+        }
+
+        /* === MANDALA BACKGROUND === */
+        .mandala-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 700px;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === HEADER === */
+        .header {
+            background: linear-gradient(180deg, #3D0000 0%, #700000 40%, #5C0000 100%);
+            padding: 2.5rem 2rem 2rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 3px solid var(--gold);
+            overflow: hidden;
+        }
+
+        .header::before,
+        .header::after {
+            content: '॥';
+            position: absolute;
+            font-size: 3rem;
+            color: var(--gold);
+            opacity: 0.4;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header::before {
+            left: 2rem;
+        }
+
+        .header::after {
+            right: 2rem;
+        }
+
+        .header-motif {
+            font-size: 1.4rem;
+            color: var(--saffron);
+            letter-spacing: 0.3em;
+            font-family: 'Tiro Devanagari Hindi', serif;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .sdancig-name {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: var(--gold);
+            letter-spacing: 0.25em;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+
+        .organiser-tag {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+            color: rgba(212, 175, 55, 0.75);
+            letter-spacing: 0.18em;
+            font-style: italic;
+            margin-bottom: 0.6rem;
+        }
+
+        .pulse-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF9933 0%, #FFD700 40%, #FF9933 70%, #E07B00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            letter-spacing: 0.05em;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .pulse-version {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--saffron);
+            letter-spacing: 0.4em;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .divider-ornament {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 0.8rem 0;
+            color: var(--gold);
+            opacity: 0.7;
+            font-size: 1.2rem;
+            letter-spacing: 0.5em;
+        }
+
+        .divider-ornament::before,
+        .divider-ornament::after {
+            content: '';
+            height: 1px;
+            width: 80px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .events-banner {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 0.8rem;
+        }
+
+        .event-pill {
+            background: rgba(255, 153, 51, 0.15);
+            border: 1px solid rgba(255, 153, 51, 0.5);
+            color: var(--saffron);
+            padding: 0.3rem 1rem;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            font-family: 'Cinzel Decorative', serif;
+            font-weight: 400;
+        }
+
+        /* === MAIN WRAPPER === */
+        .main-wrapper {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === FORM CARD === */
+        .form-card {
+            background: var(--ivory);
+            border: 1px solid var(--gold);
+            border-top: 4px solid var(--saffron);
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        /* === SECTION HEADERS === */
+        .section-header {
+            background: linear-gradient(135deg, #700000 0%, #950000 100%);
+            padding: 0.8rem 1.5rem;
+            border-bottom: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            background: var(--gold);
+            color: var(--deep-maroon);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.75rem;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        /* === FORM BODY === */
+        .form-body {
+            padding: 1.5rem;
+        }
+
+        /* === FIELD GROUP === */
+        .field-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--maroon);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+            font-family: 'Crimson Pro', serif;
+        }
+
+        .field-label .required {
+            color: var(--vermillion);
+            margin-left: 2px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 0.6rem 0.9rem;
+            border: 1px solid #C8A882;
+            border-bottom: 2px solid var(--saffron);
+            border-radius: 2px;
+            background: #FFFBF0;
+            color: var(--text-dark);
+            font-family: 'Crimson Pro', serif;
+            font-size: 1rem;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus {
+            border-color: var(--maroon);
+            border-bottom-color: var(--maroon);
+            background: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(128, 0, 0, 0.1);
+        }
+
+        input::placeholder {
+            color: #C4A882;
+            font-style: italic;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* === EVENT SELECTION === */
+        .event-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .event-check-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.7rem;
+            border: 1px solid #C8A882;
+            border-radius: 2px;
+            background: #FFFBF0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            transition: all 0.2s;
+            font-family: 'Crimson Pro', serif;
+        }
+
+        .event-check-label:hover {
+            border-color: var(--saffron);
+            background: rgba(255, 153, 51, 0.08);
+        }
+
+        .event-check-label input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--maroon);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .event-check-label.checked {
+            border-color: var(--saffron);
+            background: rgba(255, 153, 51, 0.12);
+            color: var(--maroon);
+            font-weight: 600;
+        }
+
+        /* === GROUP MEMBERS TABLE === */
+        .members-container {
+            border: 1px solid #C8A882;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .members-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .members-table thead {
+            background: linear-gradient(135deg, #700000, #950000);
+        }
+
+        .members-table th {
+            padding: 0.6rem 0.8rem;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.12em;
+            text-align: left;
+        }
+
+        .members-table tbody tr {
+            background: #FFFBF0;
+            border-bottom: 1px solid #E8D5B5;
+            transition: background 0.15s;
+        }
+
+        .members-table tbody tr:nth-child(even) {
+            background: #FFF5E0;
+        }
+
+        .members-table tbody tr:hover {
+            background: rgba(255, 153, 51, 0.08);
+        }
+
+        .members-table td {
+            padding: 0.4rem 0.5rem;
+        }
+
+        .member-num {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--saffron), var(--deep-saffron));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin: auto;
+        }
+
+        .members-table input[type="text"] {
+            border: none;
+            border-bottom: 1px dashed #C8A882;
+            border-radius: 0;
+            background: transparent;
+            padding: 0.3rem 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .members-table input[type="text"]:focus {
+            border-bottom-color: var(--maroon);
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: none;
+        }
+
+        /* === SIZE CONTROLS === */
+        .size-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .size-label {
+            font-size: 0.8rem;
+            color: var(--text-mid);
+            font-style: italic;
+        }
+
+        .size-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--saffron);
+            background: transparent;
+            color: var(--maroon);
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+
+        .size-btn:hover {
+            background: var(--saffron);
+            color: white;
+        }
+
+        .size-count {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--maroon);
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* === DECLARATION === */
+        .declaration-box {
+            background: rgba(255, 153, 51, 0.08);
+            border: 1px solid rgba(255, 153, 51, 0.4);
+            border-left: 3px solid var(--saffron);
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.2rem;
+            border-radius: 2px;
+        }
+
+        .declaration-box p {
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* === SUBMIT BUTTON === */
+        .submit-area {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(180deg, #FAF0D0, #FFF8E7);
+            border-top: 1px solid #C8A882;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #700000 0%, #950000 40%, #700000 100%);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 0.9rem 3rem;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(128, 0, 0, 0.4);
+        }
+
+        .submit-btn:hover::before {
+            opacity: 1;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-note {
+            margin-top: 0.6rem;
+            font-size: 0.8rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* === SUCCESS & ERROR === */
+        .toast {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--peacock);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            border: 1px solid var(--peacock-light);
+            z-index: 999;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+            max-width: 90vw;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.error {
+            background: var(--deep-maroon);
+            border-color: var(--vermillion);
+        }
+
+        /* === LOADING SPINNER === */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* === FOOTER === */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: rgba(212, 175, 55, 0.4);
+            font-size: 0.75rem;
+            font-style: italic;
+            letter-spacing: 0.1em;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 600px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .event-checkboxes {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .pulse-title {
+                font-size: 2.8rem;
+            }
+
+            .members-table th:nth-child(4),
+            .members-table td:nth-child(4) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .event-checkboxes {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Mandala decorative SVG -->
+    <svg class="mandala-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(350,350)" fill="none" stroke="#D4AF37" stroke-width="0.8">
+            <circle r="50" />
+            <circle r="100" />
+            <circle r="150" />
+            <circle r="200" />
+            <circle r="250" />
+            <circle r="300" />
+            <g id="petal">
+                <ellipse rx="20" ry="60" transform="translate(0,-130)" />
+            </g>
+            <use href="#petal" transform="rotate(30)" />
+            <use href="#petal" transform="rotate(60)" />
+            <use href="#petal" transform="rotate(90)" />
+            <use href="#petal" transform="rotate(120)" />
+            <use href="#petal" transform="rotate(150)" />
+            <use href="#petal" transform="rotate(180)" />
+            <use href="#petal" transform="rotate(210)" />
+            <use href="#petal" transform="rotate(240)" />
+            <use href="#petal" transform="rotate(270)" />
+            <use href="#petal" transform="rotate(300)" />
+            <use href="#petal" transform="rotate(330)" />
+            <line x1="0" y1="-280" x2="0" y2="280" />
+            <line x1="-280" y1="0" x2="280" y2="0" />
+            <line x1="-198" y1="-198" x2="198" y2="198" />
+            <line x1="198" y1="-198" x2="-198" y2="198" />
+        </g>
+    </svg>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="pulse-title">PULSE</div>
+        <div class="pulse-version">1.0</div>
+        <div
+            style="font-family:'Crimson Pro',serif; font-size:0.95rem; color:rgba(212,175,55,0.85); letter-spacing:0.2em; font-style:italic; margin-bottom:0.6rem;">
+            Organised by <strong style="font-style:normal; font-weight:600; color:var(--gold);">SAFE</strong></div>
+        <div class="divider-ornament">✦ ✦ ✦</div>
+        <div class="events-banner">
+            <span class="event-pill">💃 Dancing</span>
+            <span class="event-pill">🎭 Mimicry</span>
+            <span class="event-pill">🎤 Stand-up Comedy</span>
+        </div>
+    </header>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- MAIN -->
+    <div class="main-wrapper">
+        <form id="registrationForm" novalidate>
+
+            <!-- SECTION 1: Event -->
+            <div class="form-card" style="margin-bottom: 1.5rem;">
+                <div class="section-header">
+                    <div class="section-number">১</div>
+                    <h2>Choose Your Event</h2>
+                </div>
+                <div class="form-body">
+                    <div class="field-group">
+                        <label class="field-label">Select Event <span class="required">*</span></label>
+                        <div class="event-checkboxes" id="eventCheckboxes">
+                            <label class="event-check-label" id="lbl-dancing">
+                                <input type="radio" name="event" value="Dancing" required> 💃 Dancing
+                            </label>
+                            <label class="event-check-label" id="lbl-mimicry">
+                                <input type="radio" name="event" value="Mimicry"> 🎭 Mimicry
+                            </label>
+                            <label class="event-check-label" id="lbl-standup">
+                                <input type="radio" name="event" value="Stand-up Comedy"> 🎤 Stand-up Comedy
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: Leader Info -->
+            <div class="form-card" style="margin-bottom: 1.5rem;">
+                <div class="section-header">
+                    <div class="section-number">২</div>
+                    <h2>Group Leader / Solo Participant</h2>
+                </div>
+                <div class="form-body">
+                    <div class="field-group">
+                        <label class="field-label">Full Name <span class="required">*</span></label>
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.6rem;">
+                            <div>
+                                <input type="text" id="leaderSurname" placeholder="Surname" required>
+                                <div
+                                    style="font-size:0.7rem; color:var(--maroon); text-align:center; margin-top:3px; letter-spacing:0.08em; opacity:0.7;">
+                                    SURNAME</div>
+                            </div>
+                            <div>
+                                <input type="text" id="leaderFirstName" placeholder="First Name" required>
+                                <div
+                                    style="font-size:0.7rem; color:var(--maroon); text-align:center; margin-top:3px; letter-spacing:0.08em; opacity:0.7;">
+                                    FIRST NAME</div>
+                            </div>
+                            <div>
+                                <input type="text" id="leaderMiddleName" placeholder="Middle Name" required>
+                                <div
+                                    style="font-size:0.7rem; color:var(--maroon); text-align:center; margin-top:3px; letter-spacing:0.08em; opacity:0.7;">
+                                    MIDDLE NAME <span style="color:var(--vermillion);">*</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two-col">
+                        <div class="field-group">
+                            <label class="field-label" for="leaderRoll">Roll Number <span
+                                    class="required">*</span></label>
+                            <input type="text" id="leaderRoll" placeholder="e.g. 2024CS001" required>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="leaderDiv">Division <span class="required">*</span></label>
+                            <select id="leaderDiv" required>
+                                <option value="">— Select Division —</option>
+                                <option>A</option>
+                                <option>B</option>
+                                <option>C</option>
+                                <option>D</option>
+                                <option>E</option>
+                                <option>F</option>
+                                <option>G</option>
+                                <option>H</option>
+                                <option>I</option>
+                                <option>J</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="leaderPhone">Mobile Number <span
+                                class="required">*</span></label>
+                        <input type="tel" id="leaderPhone" placeholder="10-digit number" required>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="leaderEmail">Email Address</label>
+                        <input type="email" id="leaderEmail" placeholder="student@college.edu.in">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: Group Members -->
+            <div class="form-card" style="margin-bottom: 1.5rem;">
+                <div class="section-header">
+                    <div class="section-number">৩</div>
+                    <h2>Group Members (0 to 5 additional)</h2>
+                </div>
+                <div class="form-body">
+                    <div class="size-controls">
+                        <span class="size-label">Number of additional members:</span>
+                        <button type="button" class="size-btn" id="decreaseBtn">−</button>
+                        <span class="size-count" id="memberCount">0</span>
+                        <button type="button" class="size-btn" id="increaseBtn">+</button>
+                        <span class="size-label" style="margin-left: 0.5rem;">(max 5)</span>
+                    </div>
+
+                    <div class="members-container" id="membersContainer" style="display:none;">
+                        <table class="members-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:44px; text-align:center;">#</th>
+                                    <th style="width:130px;">Surname</th>
+                                    <th style="width:130px;">First Name</th>
+                                    <th style="width:120px;">Middle Name</th>
+                                    <th style="width:120px;">Roll Number</th>
+                                    <th style="width:110px;">Division</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membersBody"></tbody>
+                        </table>
+                    </div>
+                    <p style="font-size:0.8rem; color:#999; font-style:italic; margin-top:0.5rem;" id="soloNote">Solo
+                        participation — no additional members.</p>
+                </div>
+            </div>
+
+            <!-- DECLARATION -->
+            <div class="declaration-box">
+                <p>I / We hereby declare that all information provided is accurate. We agree to abide by all rules and
+                    regulations of PULSE 1.0 organized by S.D.A.N.C.I.G and accept the decision of the judges as final.
+                </p>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="submit-area" style="border-radius: 2px;">
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    ✦ &nbsp; Register Now &nbsp; ✦
+                </button>
+                <p class="submit-note">Entries will be saved to the official PULSE 1.0 Google Sheet</p>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="footer">॥ PULSE 1.0 &nbsp;·&nbsp; S.D.A.N.C.I.G &nbsp;·&nbsp; Cultural Festival ॥</div>
+
+    <script>
+        // ============================================================
+        // CONFIGURATION — REPLACE WITH YOUR DEPLOYED APPS SCRIPT URL
+        // ============================================================
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxC1scdbynqAuwwcTCrmfixPVIJQnQzk6VqU5mPNaI5kb2wyEcKHMaTmx41kIfuDoaPw/exec';
+        // ============================================================
+
+        // Event radio highlight
+        document.querySelectorAll('input[name="event"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                document.querySelectorAll('.event-check-label').forEach(l => l.classList.remove('checked'));
+                this.closest('.event-check-label').classList.add('checked');
+            });
+        });
+
+        // Group member size controls
+        let memberCount = 0;
+        const MAX_MEMBERS = 5;
+
+        function updateMembersTable() {
+            const tbody = document.getElementById('membersBody');
+            const container = document.getElementById('membersContainer');
+            const soloNote = document.getElementById('soloNote');
+            const countDisplay = document.getElementById('memberCount');
+
+            countDisplay.textContent = memberCount;
+
+            if (memberCount === 0) {
+                container.style.display = 'none';
+                soloNote.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'block';
+            soloNote.style.display = 'none';
+
+            // Keep existing values
+            const existing = [];
+            tbody.querySelectorAll('tr').forEach(row => {
+                existing.push({
+                    surname: row.querySelector('input[data-field="surname"]')?.value || '',
+                    firstName: row.querySelector('input[data-field="firstName"]')?.value || '',
+                    middleName: row.querySelector('input[data-field="middleName"]')?.value || '',
+                    roll: row.querySelector('input[data-field="roll"]')?.value || '',
+                    div: row.querySelector('select[data-field="div"]')?.value || ''
+                });
+            });
+
+            tbody.innerHTML = '';
+            for (let i = 1; i <= memberCount; i++) {
+                const prev = existing[i - 1] || {};
+                const divOptions = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+                    .map(d => `<option value="${d}" ${prev.div === d ? 'selected' : ''}>${d || '— Div —'}</option>`).join('');
+                tbody.innerHTML += `
+        <tr>
+          <td style="text-align:center;"><div class="member-num">${i}</div></td>
+          <td><input type="text" data-field="surname" placeholder="Surname" value="${prev.surname || ''}" required style="font-size:0.82rem;"></td>
+          <td><input type="text" data-field="firstName" placeholder="First Name" value="${prev.firstName || ''}" required style="font-size:0.82rem;"></td>
+          <td><input type="text" data-field="middleName" placeholder="Middle Name" value="${prev.middleName || ''}" required style="font-size:0.82rem;"></td>
+          <td><input type="text" data-field="roll" placeholder="Roll No." value="${prev.roll || ''}" style="font-size:0.82rem;"></td>
+          <td><select data-field="div" style="font-size:0.82rem;">${divOptions}</select></td>
+        </tr>`;
+            }
+        }
+
+        document.getElementById('increaseBtn').addEventListener('click', () => {
+            if (memberCount < MAX_MEMBERS) { memberCount++; updateMembersTable(); }
+        });
+
+        document.getElementById('decreaseBtn').addEventListener('click', () => {
+            if (memberCount > 0) { memberCount--; updateMembersTable(); }
+        });
+
+        // Toast helper
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast' + (isError ? ' error' : '');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 5000);
+        }
+
+        // FORM SUBMIT
+        document.getElementById('registrationForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const event = document.querySelector('input[name="event"]:checked');
+            const leaderSurname = document.getElementById('leaderSurname').value.trim();
+            const leaderFirstName = document.getElementById('leaderFirstName').value.trim();
+            const leaderMiddleName = document.getElementById('leaderMiddleName').value.trim();
+            const leaderName = [leaderSurname, leaderFirstName, leaderMiddleName].filter(Boolean).join(' ');
+            const leaderRoll = document.getElementById('leaderRoll').value.trim();
+            const leaderDiv = document.getElementById('leaderDiv').value;
+            const leaderPhone = document.getElementById('leaderPhone').value.trim();
+            const leaderEmail = document.getElementById('leaderEmail').value.trim();
+
+            // Validation
+            if (!event) { showToast('⚠ Please select an event.', true); return; }
+            if (!leaderSurname || !leaderFirstName || !leaderMiddleName) { showToast('⚠ Please enter Surname, First Name and Middle Name.', true); return; }
+            if (!leaderRoll) { showToast('⚠ Please enter the leader\'s roll number.', true); return; }
+            if (!leaderDiv) { showToast('⚠ Please select your division.', true); return; }
+            if (!/^\d{10}$/.test(leaderPhone)) { showToast('⚠ Enter a valid 10-digit mobile number.', true); return; }
+
+            // Collect members
+            const members = [];
+            document.querySelectorAll('#membersBody tr').forEach((row, i) => {
+                const mSurname = row.querySelector('input[data-field="surname"]').value.trim();
+                const mFirstName = row.querySelector('input[data-field="firstName"]').value.trim();
+                const mMiddleName = row.querySelector('input[data-field="middleName"]').value.trim();
+                const mName = [mSurname, mFirstName, mMiddleName].filter(Boolean).join(' ');
+                const mRoll = row.querySelector('input[data-field="roll"]').value.trim();
+                const mDiv = row.querySelector('select[data-field="div"]').value;
+                if (!mSurname || !mFirstName || !mMiddleName) { showToast(`⚠ Enter Surname, First Name and Middle Name for Member ${i + 1}.`, true); return; }
+                members.push({ name: mName, roll: mRoll, div: mDiv });
+            });
+
+            // Build payload
+            const payload = {
+                event: event.value,
+                leaderName, leaderRoll, leaderDiv, leaderPhone, leaderEmail,
+                memberCount: memberCount,
+                members
+            };
+
+            // Submit
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+            if (APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_DEPLOYED_URL_HERE') {
+                // Demo mode
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '✦ &nbsp; Register Now &nbsp; ✦';
+                    showToast('✅ Demo: Entry registered! (Connect Apps Script URL to go live)');
+                    document.getElementById('registrationForm').reset();
+                    memberCount = 0;
+                    updateMembersTable();
+                    document.querySelectorAll('.event-check-label').forEach(l => l.classList.remove('checked'));
+                }, 1500);
+                return;
+            }
+
+            try {
+                await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                showToast('🎉 Registration Successful! Best of luck at PULSE 1.0!');
+                document.getElementById('registrationForm').reset();
+                memberCount = 0;
+                updateMembersTable();
+                document.querySelectorAll('.event-check-label').forEach(l => l.classList.remove('checked'));
+            } catch (err) {
+                showToast('❌ Submission failed. Please try again or contact the organizers.', true);
+            }
+            btn.disabled = false;
+            btn.innerHTML = '✦ &nbsp; Register Now &nbsp; ✦';
+        });
+    </script>
+</body>
+
+</html>
